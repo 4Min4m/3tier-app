@@ -1,0 +1,26 @@
+stages:
+  - build
+
+variables:
+  DOCKER_REGISTRY: docker.io
+  DOCKER_USERNAME: $DOCKER_USERNAME
+  FRONTEND_IMAGE: $DOCKER_USERNAME/three-tier-frontend
+  BACKEND_IMAGE: $DOCKER_USERNAME/three-tier-backend
+  DATABASE_IMAGE: $DOCKER_USERNAME/three-tier-database
+
+build_images:
+  stage: build
+  image: docker:20.10
+  services:
+    - docker:dind
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  script:
+    - docker build -t $FRONTEND_IMAGE:latest ./frontend
+    - docker build -t $BACKEND_IMAGE:latest ./backend
+    - docker build -t $DATABASE_IMAGE:latest ./database
+    - docker push $FRONTEND_IMAGE:latest
+    - docker push $BACKEND_IMAGE:latest
+    - docker push $DATABASE_IMAGE:latest
+  only:
+    - main

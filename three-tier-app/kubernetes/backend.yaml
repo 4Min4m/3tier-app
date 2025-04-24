@@ -1,0 +1,41 @@
+cat <<EOF > kubernetes/backend.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: three-tier-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: amin4m/three-tier-backend:latest
+        env:
+        - name: DB_HOST
+          value: "mysql-service"
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "password"
+        - name: DB_NAME
+          value: "app_db"
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: three-tier-app
+spec:
+  selector:
+app: backend
+  ports:
+port: 3000
+targetPort: 3000
+  type: ClusterIP
+EOF

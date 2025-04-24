@@ -1,0 +1,37 @@
+cat <<EOF > kubernetes/database.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: three-tier-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: amin4m/three-tier-database:latest
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "password"
+        - name: MYSQL_DATABASE
+          value: "app_db"
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: three-tier-app
+spec:
+  selector:
+app: mysql
+  ports:
+port: 3306
+targetPort: 3306
+  type: ClusterIP
+EOF
