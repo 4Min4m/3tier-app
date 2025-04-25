@@ -1,4 +1,3 @@
-cat <<EOF > kubernetes/frontend.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,6 +16,8 @@ spec:
       containers:
       - name: frontend
         image: amin4m/three-tier-frontend:latest
+
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,9 +25,8 @@ metadata:
   namespace: three-tier-app
 spec:
   selector:
-app: frontend
+    app: frontend
   ports:
-port: 80
-targetPort: 80
+  - port: 80
+    targetPort: 80
   type: NodePort
-EOF

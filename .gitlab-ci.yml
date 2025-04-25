@@ -1,0 +1,63 @@
+stages:
+  - build
+
+variables:
+  DOCKER_REGISTRY: docker.io
+  DOCKER_USERNAME: $DOCKER_USERNAME
+  FRONTEND_IMAGE: $DOCKER_USERNAME/three-tier-frontend
+  BACKEND_IMAGE: $DOCKER_USERNAME/three-tier-backend
+  DATABASE_IMAGE: $DOCKER_USERNAME/three-tier-database
+
+build_frontend:
+  stage: build
+  image: docker:20.10
+  services:
+    - docker:dind
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  script:
+    - docker build -t $FRONTEND_IMAGE:$CI_COMMIT_SHA ./frontend
+    - docker push $FRONTEND_IMAGE:$CI_COMMIT_SHA
+    - docker tag $FRONTEND_IMAGE:$CI_COMMIT_SHA $FRONTEND_IMAGE:latest
+    - docker push $FRONTEND_IMAGE:latest
+  only:
+    changes:
+      - frontend/**/*
+    refs:
+      - main
+
+build_backend:
+  stage: build
+  image: docker:20.10
+  services:
+    - docker:dind
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  script:
+    - docker build -t $BACKEND_IMAGE:$CI_COMMIT_SHA ./backend
+    - docker push $BACKEND_IMAGE:$CI_COMMIT_SHA
+    - docker tag $BACKEND_IMAGE:$CI_COMMIT_SHA $BACKEND_IMAGE:latest
+    - docker push $BACKEND_IMAGE:latest
+  only:
+    changes:
+      - backend/**/*
+    refs:
+      - main
+
+build_database:
+  stage: build
+  image: docker:20.10
+  services:
+    - docker:dind
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  script:
+    - docker build -t $DATABASE_IMAGE:$CI_COMMIT_SHA ./database
+    - docker push $DATABASE_IMAGE:$CI_COMMIT_SHA
+    - docker tag $DATABASE_IMAGE:$CI_COMMIT_SHA $DATABASE_IMAGE:latest
+    - docker push $DATABASE_IMAGE:latest
+  only:
+    changes:
+      - database/**/*
+    refs:
+      - main

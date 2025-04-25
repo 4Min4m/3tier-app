@@ -1,4 +1,3 @@
-cat <<EOF > kubernetes/database.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,6 +21,8 @@ spec:
           value: "password"
         - name: MYSQL_DATABASE
           value: "app_db"
+
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -29,9 +30,8 @@ metadata:
   namespace: three-tier-app
 spec:
   selector:
-app: mysql
+    app: mysql
   ports:
-port: 3306
-targetPort: 3306
+  - port: 3306
+    targetPort: 3306
   type: ClusterIP
-EOF

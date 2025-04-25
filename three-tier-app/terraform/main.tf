@@ -1,5 +1,5 @@
 provider "kubernetes" {
-  config_path = "/root/.kube/config" # Katacoda's kubeconfig path
+  config_path = "/root/.kube/config" # Killercoda's kubeconfig path
 }
 
 resource "kubernetes_namespace" "app" {

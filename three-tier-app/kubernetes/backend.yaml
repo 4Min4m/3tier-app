@@ -1,4 +1,3 @@
-cat <<EOF > kubernetes/backend.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,6 +25,8 @@ spec:
           value: "password"
         - name: DB_NAME
           value: "app_db"
+
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -33,9 +34,8 @@ metadata:
   namespace: three-tier-app
 spec:
   selector:
-app: backend
+    app: backend
   ports:
-port: 3000
-targetPort: 3000
+  - port: 3000
+    targetPort: 3000
   type: ClusterIP
-EOF
