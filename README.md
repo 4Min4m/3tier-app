@@ -2,6 +2,8 @@
 
 This project is a three-tier web application consisting of a **React frontend**, a **Node.js backend**, and a **MySQL database**, deployed on a Kubernetes cluster using **Terraform** for infrastructure as code, **Ansible** for automation, and **GitLab CI/CD** for continuous integration and deployment. The application is designed to run in environments like **Killercoda** or **Play with Kubernetes (PWK)**.
 
+<img src="main.png" alt="devops app preview" width="100%">
+
 ## Project Structure
 - **frontend/**: React application serving the user interface.
 - **backend/**: Node.js API handling CRUD operations with MySQL.
